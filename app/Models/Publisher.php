@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Publisher extends Model
 {
     use HasFactory;
+
+    //relasi one to many table publisher ke table mbook
+    public function books()
+    {
+        return $this->hasMany('App\Models\Book', 'publisher_id');
+    }
 }
