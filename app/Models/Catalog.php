@@ -11,6 +11,6 @@ class Catalog extends Model
     //relasi one to many table publisher ke table mbook
     public function books()
     {
-        return $this->hasMany('App\Models\Catalog', 'catalog_id');
+        return $this->hasMany('App\Models\Book', 'catalog_id');
     }
 }
