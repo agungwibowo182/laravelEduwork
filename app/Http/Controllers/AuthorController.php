@@ -10,9 +10,17 @@ class AuthorController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        return view('admin.author.index');
+        $authors = Author::all();
+
+        // return $catalogs;
+        return view('admin.author', compact('authors'));
     }
 
     /**
@@ -28,7 +36,19 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         // validasi data
+        //  $this->validate($request,[
+        //     'name' => ['required'],
+        //     'email' => ['required'],
+        //     'phone_number' => ['required'],
+        //     'address' => ['required'],
+        //     ]);
+    
+        //     Author::create($request->all());
+    
+        //     return redirect('authors');
+
+        return $request;
     }
 
     /**
