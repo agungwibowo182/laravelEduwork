@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="{{asset('assets/dist/css/adminlte.min.css')}}">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
-  @section('css')
+  @yield('css')
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -258,6 +258,6 @@
 {{-- cdn vue js dan axios nya --}}
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-@section('js')
+@yield('js')
 </body>
 </html>

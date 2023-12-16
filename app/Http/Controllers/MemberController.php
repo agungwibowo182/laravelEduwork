@@ -12,7 +12,15 @@ class MemberController extends Controller
      */
     public function index()
     {
-        return view('admin.member.index');
+        return view('admin.member');
+    }
+
+    public function api ()
+    {
+        $members = Member::all();
+        $datatables = datatables()->of($members)->addIndexColumn();
+
+        return $datatables->make(true); 
     }
 
     /**
@@ -28,7 +36,18 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //  validasi data
+        $this->validate($request,[
+            'name' => ['required'],
+            'gender' => ['required'],
+            'phone_number' => ['required'],
+            'address' => ['required'],
+            'email' => ['required'],
+            ]);
+    
+            Member::create($request->all());
+
+            return redirect('members');
     }
 
     /**
@@ -52,7 +71,17 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        //
+        $this->validate($request,[
+            'name' => ['required'],
+            'gender' => ['required'],
+            'phone_number' => ['required'],
+            'address' => ['required'],
+            'email' => ['required'],
+            ]);
+    
+            $member->update($request->all());
+                
+            return redirect('members');
     }
 
     /**
@@ -60,6 +89,6 @@ class MemberController extends Controller
      */
     public function destroy(Member $member)
     {
-        //
+        $member->delete();
     }
 }
