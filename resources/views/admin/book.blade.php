@@ -1,6 +1,15 @@
 @extends('layouts.admin')
 @section('header', 'Book')
 
+@section('css')
+{{-- datatables --}}
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+
+
+@endsection
+
 @section('content')
 
 <div id="controller">
@@ -34,7 +43,7 @@
     <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="post" :action="actionUrl" autocomplete="off" @submit="SubmitForm($event, data.id)">
+                <form method="POST" :action="actionUrl" autocomplete="off">
                     <div class="modal-header">
                         <h4 class="modal-title">Book</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -110,32 +119,13 @@
     var actionUrl = '{{ url('books') }}';
     var apiUrl = '{{ url('api/books') }}';
 
-    var columns = [
-        {data: 'DT_RowIndex', class: 'text-center', orderable:true},
-        {data: 'isbn', class: 'text-center', orderable:true},
-        {data: 'title', class: 'text-center', orderable:false},
-        {data: 'year', class: 'text-center', orderable:false},
-        {data: 'publisher_id', class: 'text-center', orderable:false},
-        {data: 'author_id', class: 'text-center', orderable:false},
-        {data: 'catalog_id', class: 'text-center', orderable:false},
-        {data: 'qty', class: 'text-center', orderable:false},
-        {data: 'price', class: 'text-center', orderable:false},
-        {render: function(index, row, data, meta){
-            return `
-                <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, ${meta.row})">Edit</a>
-                <a href="#" class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ${data.id})">Delete</a>
-                `;
-        }, ordertable:false, width:'200px', class: 'text-center'},
-    ];
-
     var app = new Vue ({
         el:'#controller',
         data: {
-            books: [],
+            books : [],
             search:'',
             book:{},
-            actionUrl,
-            apiUrl,
+            actionUrl : '{{ url ('books') }}',
             editStatus: false
         },
         mounted: function() {
@@ -156,32 +146,26 @@
                 });
             },
             addData() {
-                this.book ={};
+                this.book = {};
+                this.actionUrl = '{{ url ('books') }}',
                 this.editStatus = false;
                 $('#modal-default').modal();
             },
             editData(book) {
                 this.book = book;
+                this.actionUrl = '{{ url ('books') }}'+'/'+book.id;
                 this.editStatus = true;
                 $('#modal-default').modal();
             },
             deleteData(id) {
+                this.actionUrl = '{{ url('books') }}'+'/'+id;
                 if(confirm("Are you sure ?")) {
-                    $(event.target).parents('tr').remove();
-                    axios.post(this.actionUrl+'/'+id, {_method: 'DELETE'}).then(response => {
-                        alert('Data has been removed');
+                    axios.post(this.actionUrl, {_method: 'DELETE'}).then(response=> {
+                        location.reload();
                     });
                 }
             },
-            submitForm(event, id) {
-                event.prevenDefault();
-                const _this = this;
-                var actionUrl = ! this.editStatus ? this.actionUrl : this.actionUrl+'/'+id;
-                axios.post(actionUrl, new FormData($(event.target)[0])).then(response => {
-                    $('#modal-default').modal('hide');
-                    _this.table.ajax.reload();
-                });
-            },
+            
             // function format number
             numberWithSpaces(x) {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -195,7 +179,6 @@
                 })
             }
         }
-    })
-
+    });
 </script>
 @endsection

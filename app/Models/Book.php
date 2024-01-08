@@ -9,6 +9,8 @@ class Book extends Model
 {
      //relasi many to many table publisher ke table mbook
     use HasFactory;
+    protected $fillable = ['isbn','title', 'year', 'publisher_id','author_id','catalog_id', 'qty', 'price'];
+
     public function author()
     {
         return $this->belongsTo('App\Models\Author', 'author_id');
@@ -18,8 +20,6 @@ class Book extends Model
     {
         return $this->belongsTo('App\Models\Publisher', 'publisher_id');
     }
-
-   
     
     public function catalog()
     {

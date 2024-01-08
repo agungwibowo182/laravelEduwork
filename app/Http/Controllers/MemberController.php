@@ -10,15 +10,27 @@ class MemberController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return view('admin.member');
+       
+        if ($request->sex) {
+            $datas = Member::where('gender', $request->sex)->get();
+        } else {
+            $datas = Member::all();
+        }
+
+        $datatables = datatables()->of($datas)->addIndexColumn();
+        return $datatables->make(true);
     }
 
     public function api ()
     {
         $members = Member::all();
-        $datatables = datatables()->of($members)->addIndexColumn();
+        $datatables = datatables()->of($members)
+                            ->addColumn('date', function($member){
+                                return convert_date($member->created_at);
+                            })->addIndexColumn();
 
         return $datatables->make(true); 
     }

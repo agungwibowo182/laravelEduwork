@@ -61,8 +61,6 @@ var controller = new Vue({
                 $('#modal-default').modal('hide');
                 _this.table.ajax.reload();
             });
-        }
-        
-        
+        }  
     }
 });

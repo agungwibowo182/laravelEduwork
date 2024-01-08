@@ -12,29 +12,37 @@
 
 @section('content')
 <div id="controller">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-9">
                     <a href="#" @click="addData()" class="btn btn-sm btn-primary pull-right">Create New Member</a>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <table id="datatable" class= "table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th style="width: 30px">#</th>
-                                <th>Name</th>
-                                <th>Gender</th>
-                                <th>Phone Number</th>
-                                <th>Address</th>
-                                <th>Email</th>
-                                <th class="text-right">Action</th>
-                            </tr>
-                        </thead>
-                    </table>
+                <div class="col-md-3">
+                    <select class="form-control" name="gender">
+                        <option value="0">Semua Jenis Kelamin</option>
+                        <option value="P">Perempuan</option>
+                        <option value="L">Laki Laki</option>
+                    </select>                
                 </div>
             </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="datatable" class= "table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 30px">#</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Created at</th>
+                        <th class="text-right">Action</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
     <div class="modal fade" id="modal-default">
@@ -116,6 +124,7 @@
         {data: 'phone_number', class: 'text-center', orderable:false},
         {data: 'address', class: 'text-center', orderable:true},
         {data: 'email', class: 'text-center', orderable:false},
+        {data: 'date', class: 'text-center', orderable:false},
         {render: function(index, row, data, meta){
             return `
                 <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, ${meta.row})">Edit</a>
@@ -125,5 +134,16 @@
     ];
 </script>
 <script src="{{ asset('js/data.js') }}"></script>
+<script type="text/javascript">
+    $('select[name=gender]').on('change', function() {
+        gender = $('select[name=gender]').val();
+
+        if (gender == 0) {
+            controller.table.ajax.url(actionUrl).load();
+        }else {
+            controller.table.ajax.url(actionUrl+'?gender='+gender).load();
+        }
+    });
+</script>
 @endsection
 
