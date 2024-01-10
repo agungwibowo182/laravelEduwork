@@ -7,6 +7,7 @@ use App\Models\Publisher;
 use App\Models\Author;
 use App\Models\Catalog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
@@ -42,21 +43,32 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //  validasi data
-        $this->validate($request,[
-            'isbn' => ['required'],
-            'title' => ['required'],
-            'year' => ['required'],
-            'publisher_id' => ['required'],
-            'author_id' => ['required'],
-            'catalog_id' => ['required'],
-            'qty' => ['required'],
-            'price' => ['required'],
-            ]);
+        try {
+            // ... your existing code
+            $this->validate($request,[
+                'isbn' => ['required'],
+                'title' => ['required'],
+                'year' => ['required'],
+                'publisher_id' => ['required'],
+                'author_id' => ['required'],
+                'catalog_id' => ['required'],
+                'qty' => ['required'],
+                'price' => ['required'],
+                ]);
+        
+                Book::create($request->all());
+                // dd($post);
+                
     
-            Book::create($request->all());
-
-            return redirect('books');
+                return redirect('books');
+    
+        } catch (\Exception $e) {
+            
+            Log::debug('Error in store method: ' . $e->getMessage());
+            dd($e); // or Log::debug($e);
+        }
+        //  validasi data
+        
     }
 
     /**

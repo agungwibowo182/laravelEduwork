@@ -43,7 +43,8 @@
     <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" :action="actionUrl" autocomplete="off">
+                <form method="POST" :action="actionUrl" autocomplete="off" @submit.prevent="submitForm">
+                    @csrf
                     <div class="modal-header">
                         <h4 class="modal-title">Book</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -58,14 +59,23 @@
                         <div class="form-group">
                             <label>ISBN</label>
                             <input type="number" class="form-control" name="isbn" required="" :value="book.isbn">
+                            @error('isbn')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Title</label>
                             <input type="text" class="form-control" name="title"  required="" :value="book.title">
+                            @error('title')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Year</label>
                             <input type="number" class="form-control" name="year" required="" :value="book.year">
+                            @error('year')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Publisher</label>
@@ -74,30 +84,45 @@
                                 <option :selected="book.publisher_id == {{ $publisher -> id }}" value="{{ $publisher->id }}">{{ $publisher->name }}</option>
                                 @endforeach
                             </select>
+                            @error('publisher_id')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Author</label>
-                            <select name="authors" class="form-control">
+                            <select name="author_id" class="form-control">
                                 @foreach ($authors as $author )
                                 <option :selected="book.author_id == {{ $author -> id }}" value="{{ $author->id }}">{{ $author->name }}</option>
                                 @endforeach
                             </select>
+                            @error('author_id')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Catalog</label>
-                            <select name="catalogs" class="form-control">
+                            <select name="catalog_id" class="form-control">
                                 @foreach ($catalogs as $catalog )
                                 <option :selected="book.catalog_id == {{ $catalog -> id }}"  value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
                             </select>
+                            @error('catalog_id')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Qty Stock</label>
                             <input type="number" class="form-control" name="qty" required="" :value="book.qty">
+                            @error('qty')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Harga Pinjam</label>
                             <input type="number" class="form-control" name="price" required="" :value="book.price">
+                            @error('price')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -146,16 +171,19 @@
                 });
             },
             addData() {
+                // console.log('addData method called');
                 this.book = {};
                 this.actionUrl = '{{ url ('books') }}',
                 this.editStatus = false;
                 $('#modal-default').modal();
             },
             editData(book) {
-                this.book = book;
-                this.actionUrl = '{{ url ('books') }}'+'/'+book.id;
+                
+                this.book = { ...book }; // Make a copy to avoid modifying the original book data
+                this.actionUrl = '{{ url('books') }}'; // Ensure the URL is constructed correctly
                 this.editStatus = true;
                 $('#modal-default').modal();
+                // console.log('{{ url('books') }}' + '/' + book.id);
             },
             deleteData(id) {
                 this.actionUrl = '{{ url('books') }}'+'/'+id;
@@ -164,6 +192,27 @@
                         location.reload();
                     });
                 }
+            },
+            submitForm() {
+                event.preventDefault();
+                const _this = this;
+
+                const actionUrl = !this.editStatus ? this.actionUrl : (this.book.id ? this.actionUrl + '/' + this.book.id : this.actionUrl);
+
+                const formData = new FormData($(event.target)[0]);
+                if (this.editStatus) {
+                    formData.append('_method', 'PUT');
+                }
+                
+                // console.log(actionUrl);
+                axios.post(actionUrl, formData)
+                    .then(response => {
+                        $('#modal-default').modal('hide');
+                        _this.get_books(); // Reload the data
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             },
             
             // function format number
