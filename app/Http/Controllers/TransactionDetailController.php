@@ -9,6 +9,8 @@ class TransactionDetailController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -17,6 +19,8 @@ class TransactionDetailController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -25,6 +29,9 @@ class TransactionDetailController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -33,6 +40,9 @@ class TransactionDetailController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param  \App\Models\TransactionDetail  $transactionDetail
+     * @return \Illuminate\Http\Response
      */
     public function show(TransactionDetail $transactionDetail)
     {
@@ -41,6 +51,9 @@ class TransactionDetailController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\TransactionDetail  $transactionDetail
+     * @return \Illuminate\Http\Response
      */
     public function edit(TransactionDetail $transactionDetail)
     {
@@ -49,6 +62,10 @@ class TransactionDetailController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\TransactionDetail  $transactionDetail
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TransactionDetail $transactionDetail)
     {
@@ -57,6 +74,9 @@ class TransactionDetailController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\TransactionDetail  $transactionDetail
+     * @return \Illuminate\Http\Response
      */
     public function destroy(TransactionDetail $transactionDetail)
     {

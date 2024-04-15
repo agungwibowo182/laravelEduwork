@@ -12,16 +12,30 @@ class MemberController extends Controller
      */
     public function index(Request $request)
     {
+        // return view('admin.member');
+       
+        // if ($request->gender) {
+        //     $datas = Member::where('gender', $request->gender)->get();
+        // } else {
+        //     $datas = Member::all();
+        // }
+
+        // $datatables = datatables()->of($datas)->addIndexColumn();
+        // return $datatables->make(true);
+
+
+        if ($request->ajax()) {
+            $gender = $request->gender;
+            $datas = Member::when($gender, function ($query) use ($gender) {
+                return $query->where('gender', $gender);
+            })->get();
+    
+            $datatables = datatables()->of($datas)->addIndexColumn();
+            return $datatables->make(true);
+        }
+    
         return view('admin.member');
        
-        if ($request->sex) {
-            $datas = Member::where('gender', $request->sex)->get();
-        } else {
-            $datas = Member::all();
-        }
-
-        $datatables = datatables()->of($datas)->addIndexColumn();
-        return $datatables->make(true);
     }
 
     public function api ()

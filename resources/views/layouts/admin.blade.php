@@ -143,15 +143,15 @@
             <a href="{{url('home')}}" class="nav-link {{ request()->is('home') ? 'active' : ''}}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                Home
+                Dashboard
               </p>
             </a>
           </li>
           <li class="nav-item">
             <a href="{{url('transactions')}}" class="nav-link {{ request()->is('transactions')? 'active' : ''}}">
-              <i class="nav-icon fas fa-money-check"></i>
+              <i class="nav-icon fas fa-shopping-cart"></i>
               <p>
-                Transaction
+                Peminjaman
               </p>
             </a>
           </li>
@@ -164,37 +164,46 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{url('members')}}" class="nav-link {{ request()->is('members')? 'active' : ''}}">
-              <i class="nav-icon fas fa-users"></i>
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-database"></i>
               <p>
-                Member
+                Data Master
+                <i class="fas fa-angle-left right"></i>
               </p>
             </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{url('publishers')}}" class="nav-link {{ request()->is('publishers')? 'active' : ''}}">
-              <i class="nav-icon fas fa-columns"></i>
-              <p>
-                Publisher
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{url('authors')}}" class="nav-link {{ request()->is('authors')? 'active' : ''}}">
-              <i class="nav-icon fas fa-edit"></i>
-              <p>
-                Author
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{url('catalogs')}}" class="nav-link {{ request()->is('catalogs')? 'active' : ''}}">
-              <i class="nav-icon fas fa-file"></i>
-              <p>
-                Catalog
-              </p>
-            </a>
-          </li>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('catalogs') }}" class="nav-link {{ request()->is('catalogs')? 'active' : ''}}">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>
+                    Catalog
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('publishers') }}" class="nav-link {{ request()->is('publishers')? 'active' : ''}}">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>
+                    Publisher
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('authors') }}" class="nav-link {{ request()->is('authors')? 'active' : ''}}">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>
+                    Author
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('members') }}" class="nav-link {{ request()->is('members')? 'active' : ''}}">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>
+                    Member
+                  </p>
+                </a>
+              </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

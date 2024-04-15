@@ -68,7 +68,12 @@
                         </div>
                         <div class="form-group">
                             <label>Gender</label>
-                            <input type="text" class="form-control" name="gender" :value="data.gender" required="">
+                            {{-- <input type="text" class="form-control" name="gender" :value="data.gender" required=""> --}}
+                            <select class="form-control" name="gender" :value="data.gender" required="">
+                                {{-- <option value="0">Semua Jenis Kelamin</option> --}}
+                                <option value="P">Laki Laki</option>
+                                <option value="L">Perempuan</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Phone Number</label>
@@ -124,20 +129,20 @@
         {data: 'phone_number', class: 'text-center', orderable:false},
         {data: 'address', class: 'text-center', orderable:true},
         {data: 'email', class: 'text-center', orderable:false},
-        {data: 'date', class: 'text-center', orderable:false},
+        {data: 'created_at', class: 'text-center', orderable:false},
         {render: function(index, row, data, meta){
             return `
                 <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, ${meta.row})">Edit</a>
                 <a href="#" class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ${data.id})">Delete</a>
                 `;
-        }, ordertable:false, width:'200px', class: 'text-center'},
+        }, ordertable:false, width:'100px', class: 'text-center'},
     ];
 </script>
 <script src="{{ asset('js/data.js') }}"></script>
 <script type="text/javascript">
     $('select[name=gender]').on('change', function() {
         gender = $('select[name=gender]').val();
-
+       
         if (gender == 0) {
             controller.table.ajax.url(actionUrl).load();
         }else {

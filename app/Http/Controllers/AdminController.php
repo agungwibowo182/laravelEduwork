@@ -2,69 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+use Illuminate\Http\Request;
 use App\Models\Book;
-use App\Models\Catalog;
 use App\Models\Member;
 use App\Models\Publisher;
-use App\Models\Author;
 use App\Models\Transaction;
-
-use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AdminController extends Controller
 {
-    public function home()
+    public function index()
     {
-        $total_member = Member::count();
-        $total_book = Book::count();
-        $total_transaction = Transaction::whereMonth('date_start', date('m'))->count();
-        $total_publisher = Publisher::count();
+        $books = Book::count();
+        $members = Member::count();
+        $publishers = Publisher::count();
+        $transactions = Transaction::count();
 
-        // $data_donut = Book::select(DB::raw("COUNT(publisher_id) as total"))->groupBy('publisher_id')->orderBy('publisher_id', 'asc')->pluck('total');
-        // $label_donut = Publisher::orderBy('publisher_id', 'asc')->join('books', 'books.publisher_id', '=', 'publishers.id')->pluck('name');
+        // grafik peminjaman
+        $label_bar = ['Peminjaman', 'Pengembalian'];
+        $data_bar = [];
 
-        // $label_bar = ['Transaction'];
-        // $data_bar = [];
+        foreach($label_bar as $key => $value){
+            $data_bar[$key]['label'] = $label_bar[$key];
+            $data_bar[$key]['backgroundColor'] = $key == 0 ? 'rgba(60, 141, 188, 0.9)' : 'rgba(210, 214, 222, 1)';
+            $data_month = [];
 
-        // foreach ($label_bar as $key => $value) {
-        //     $data_bar[$key]['label'] = $label_bar[$key];
-        //     $data_month = [];
+            foreach(range(1,12) as $month){
+                if($key == 0){
+                    $data_month[] = Transaction::select(DB::raw("COUNT(*) as total"))->whereMonth('date_start', $month)->first()->total;
+                } else {
+                    $data_month[] = Transaction::select(DB::raw("COUNT(*) as total"))->whereMonth('date_end', $month)->where('status', 1)->first()->total;
+                }
+            }
+            $data_bar[$key]['data'] = $data_month;
+        }
+        // grafik peminjaman
 
-        //     foreach (range(1,12) as $month) {
-        //         $data_month[] = Transaction::select(DB::raw("COUNT(*)as total"))->whereMonth('tgl_pinjam',$month)->first()->total;
-        //     }
-        //     $data_bar[$key]['data'] = $data_month;
-        // }   
-        return view('home', compact('total_member', 'total_book','total_transaction','total_publisher'));
-    }
-    public function catalog()
-    {
-        $data_katalog = Catalog::all();
-        return view('admin.catalog.index',compact('data_katalog'));
-    }
+        // grafik katalog
+        $data_pie = DB::table('books')
+                    ->select('books.catalog_id', DB::raw('count(books.id) as count'))
+                    ->groupBy('books.catalog_id')
+                    ->pluck('count');
 
-    public function publisher()
-    {
-        $data_publisher = Publisher::all();
-        return view('admin.publisher',compact('data_publisher'));
-    }
+        $label_pie = DB::table('catalogs')
+                    ->join('books', 'books.id', '=', 'catalogs.id')
+                    ->pluck('name');
+        // grafik katalog
 
-    public function author()
-    {
-        $data_author = Author::all();
-        return view('admin.author',compact('data_author'));
-    }
-
-    public function member()
-    {
-        $data_member = Member::all();
-        return view('admin.member',compact('data_member'));
+        return view('home', compact('books', 'members', 'publishers', 'transactions', 'data_bar', 'data_pie', 'label_pie',));
     }
 
-    public function book()
+    public function test_spatie()
     {
-        $data_buku= Book::all();
-        return view('admin.book',compact('data_book'));
+        // $role = Role::create(['name' => 'petugas']);
+        // $permission = Permission::create(['name' => 'index peminjaman']);
+
+        // $role->givePermissionTo($permission);
+        // $permission->assignRole($role);
+
+        // $user = auth()->user();
+        // $user->assignRole('petugas');
+        // return $user;
+
+        // $user = User::with('roles')->get();
+        // return $user;
+
+        // $user = User::where('id', 2)->first();
+        // $user->removeRole('petugas');
     }
 }
